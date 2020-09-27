@@ -1,4 +1,5 @@
 import unittest
+import time
 import random
 
 from simple_calculator import Calculator
@@ -6,7 +7,12 @@ from simple_calculator import Calculator
 
 class TestCalculator(unittest.TestCase):
     def setUp(self):
-        self.calculator = Calculator(random.randint(1,100))
+        self.calculator = Calculator(random.randint(1, 100))
+        #print(self.calculator.value)
+        self.timestart = time.time()
+
+    def tearDown(self):
+        print(time.time() - self.timestart)
 
     def test_add(self):
         calc_value = self.calculator.value
@@ -31,11 +37,19 @@ class TestCalculator(unittest.TestCase):
 
     def test_float(self):
         calc_value = self.calculator.value
-        self.assertEqual(self.calculator.root(6).divide(10, 2, 1 / 2).multiply(2.28).value, (calc_value**(1/6)) / 10 * 2.28)
+        self.assertEqual(self.calculator.root(6).divide(10, 2, 1 / 2).multiply(2.28).value,
+                         (calc_value ** (1 / 6)) / 10 * 2.28)
 
     def test_divide_by_zero(self):
         with self.assertRaises(ValueError):
             self.calculator.divide(10, 0)
+
+    def test_long_calc(self):
+        calc_value = self.calculator.value
+        for i in range(500000):
+            self.calculator.power(100)
+            self.calculator.root(100)
+        self.assertTrue(-1e-6 < self.calculator.value - calc_value < 1e-6)
 
 
 if __name__ == '__main__':
