@@ -69,6 +69,9 @@ class Calculator:
     def __str__(self):
         return str(self.value)
 
+    def __iter__(self):
+        return self.value
+
 
 if __name__ == '__main__':
     calc = Calculator(1)
